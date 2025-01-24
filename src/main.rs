@@ -3,10 +3,7 @@ mod spawners;
 
 use components::{camera_sens_component::*, player_component::*, world_model_component::*};
 
-use bevy::{
-    color::palettes::tailwind, input::mouse::AccumulatedMouseMotion, prelude::*,
-    render::view::RenderLayers, window::CursorGrabMode,
-};
+use bevy::{input::mouse::AccumulatedMouseMotion, prelude::*, window::CursorGrabMode};
 use std::f32::consts::FRAC_PI_2;
 
 pub struct MainMethod;
@@ -22,7 +19,7 @@ impl Plugin for MainMethod {
             ),
         );
         app.add_systems(Update, (move_camera, change_fov, player_movement));
-        app.add_observer(spawn_cube);
+        app.add_observer(spawners::spawn_cube);
     }
 }
 
@@ -54,22 +51,6 @@ fn move_camera(
 
         transform.rotation = Quat::from_euler(EulerRot::YXZ, yaw, pitch, roll);
     }
-}
-
-fn spawn_cube(
-    _click: Trigger<Pointer<Click>>,
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-    mut num: Local<usize>,
-) {
-    commands.spawn((
-        Mesh3d(meshes.add(Cuboid::new(0.5, 0.5, 0.5))),
-        MeshMaterial3d(materials.add(Color::srgb_u8(124, 144, 255))),
-        Transform::from_xyz(0.0, 0.25 + 0.55 * *num as f32, 0.0),
-    ));
-    // With the MeshPickingPlugin added, you can add pointer event observers to meshes:
-    *num += 1;
 }
 
 pub fn player_movement(
