@@ -94,7 +94,18 @@ pub fn spawn_lights(mut commands: Commands) {
             shadows_enabled: true,
             ..default()
         },
-        Transform::from_xyz(-3.0, 4.0, -0.75),
+        Transform::from_xyz(-5.0, 4.0, -0.75),
+        // The light source illuminates both the world model and the view model.
+        RenderLayers::from_layers(&[DEFAULT_RENDER_LAYER, VIEW_MODEL_RENDER_LAYER]),
+    ));
+
+    commands.spawn((
+        PointLight {
+            color: Color::from(tailwind::ROSE_300),
+            shadows_enabled: true,
+            ..default()
+        },
+        Transform::from_xyz(5.0, 4.0, 0.75),
         // The light source illuminates both the world model and the view model.
         RenderLayers::from_layers(&[DEFAULT_RENDER_LAYER, VIEW_MODEL_RENDER_LAYER]),
     ));
@@ -112,7 +123,9 @@ pub fn spawn_text(mut commands: Commands) {
             "Move the camera with your mouse.\n",
             "Press arrow up to decrease the FOV of the world model.\n",
             "Press arrow down to increase the FOV of the world model.\n",
-            "Press WASD to move around"
+            "Press WASD to move around.\n",
+            "Press middle button on the mouse to grab.\n",
+            "Press Left moues button to summon a cube.\n",
         )));
 }
 
