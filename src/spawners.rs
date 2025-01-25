@@ -11,9 +11,6 @@ const DEFAULT_RENDER_LAYER: usize = 0;
 const VIEW_MODEL_RENDER_LAYER: usize = 1;
 
 pub fn spawn_view_model(mut commands: Commands) {
-    /*let arm = meshes.add(Cuboid::new(0.01, 0.01, 0.4));
-    let arm_material = materials.add(Color::from(tailwind::TEAL_200));*/
-
     commands
         .spawn((
             Player,
