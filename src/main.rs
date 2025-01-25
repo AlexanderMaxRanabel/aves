@@ -60,7 +60,7 @@ pub fn player_movement(
     mouse: Res<ButtonInput<MouseButton>>,
     mut query: Query<(&mut Transform, &Player)>,
 ) {
-    if let Ok((mut transform, player)) = query.get_single_mut() {
+    if let Ok((mut transform, _player)) = query.get_single_mut() {
         let mut speed: f32 = 0.5;
         let mut direction = Vec3::ZERO;
 
@@ -117,18 +117,8 @@ pub fn player_movement(
             window.cursor_options.grab_mode = CursorGrabMode::Locked;
         }
 
-        /*if keyboard.pressed(KeyCode::KeyG) {
-            commands
-                .spawn((
-                    Text::new("Click Me!"),
-                    Node {
-                        position_type: PositionType::Absolute,
-                        top: Val::Percent(12.0),
-                        left: Val::Percent(12.0),
-                        ..default()
-                    },
-                ))
-                .observe(spawn_cube);
+        /*if mouse.just_pressed(MouseButton::Left) {
+            let _location = transform.translation;
         }*/
 
         // Normalize the direction and apply movement

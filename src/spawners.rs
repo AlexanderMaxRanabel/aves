@@ -125,12 +125,17 @@ pub fn spawn_cube(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut num: Local<usize>,
+    mut query: Query<(&mut Transform, &Player)>,
 ) {
-    commands.spawn((
-        Mesh3d(meshes.add(Cuboid::new(0.5, 0.5, 0.5))),
-        MeshMaterial3d(materials.add(Color::srgb_u8(124, 144, 255))),
-        Transform::from_xyz(0.0, 0.25 + 0.55 * *num as f32, 0.0),
-    ));
-    // With the MeshPickingPlugin added, you can add pointer event observers to meshes:
-    *num += 1;
+    if let Ok((transform, _player)) = query.get_single_mut() {
+        let location = transform.translation;
+        commands.spawn((
+            Mesh3d(meshes.add(Cuboid::new(0.6, 0.6, 0.6))),
+            MeshMaterial3d(materials.add(Color::srgb_u8(99, 144, 255))),
+            Transform::from_xyz(location.x, location.y, location.z),
+            //(0.0, 0.25 + 0.55 * *num as f32, 0.0),
+        ));
+        // With the MeshPickingPlugin added, you can add pointer event observers to meshes:
+        *num += 1;
+    }
 }
