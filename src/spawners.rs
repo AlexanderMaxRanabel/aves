@@ -52,10 +52,14 @@ pub fn spawn_world_model(
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     let floor = meshes.add(Plane3d::new(Vec3::Y, Vec2::splat(50.0)));
+    let wall_1 = meshes.add(Plane3d::new(Vec3::X, Vec2::splat(20.0)));
+    //let wall_2 = meshes.add(Plane3d::new(Vec3::Z, Vec2::splat(-50.0)));
     let cube = meshes.add(Cuboid::new(2.0, 0.5, 1.0));
     let torus = meshes.add(Torus::new(2.0, 0.5));
     let material = materials.add(Color::WHITE);
     commands.spawn((Mesh3d(floor), MeshMaterial3d(material.clone())));
+    commands.spawn((Mesh3d(wall_1), MeshMaterial3d(material.clone())));
+    //commands.spawn((Mesh3d(wall_2), MeshMaterial3d(material.clone())));
 
     commands.spawn((
         Mesh3d(cube.clone()),

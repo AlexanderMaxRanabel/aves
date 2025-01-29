@@ -1,7 +1,9 @@
 mod components;
+mod resources;
 mod spawners;
 
 use components::{camera_sens_component::*, player_component::*, world_model_component::*};
+use resources::inventory::*;
 
 use bevy::{input::mouse::AccumulatedMouseMotion, prelude::*, window::CursorGrabMode};
 use std::f32::consts::FRAC_PI_2;
