@@ -7,6 +7,7 @@ use resources::inventory::*;
 
 use bevy::{input::mouse::AccumulatedMouseMotion, prelude::*, window::CursorGrabMode};
 use std::f32::consts::FRAC_PI_2;
+use std::fs;
 
 pub struct MainMethod;
 impl Plugin for MainMethod {
@@ -110,6 +111,16 @@ pub fn player_movement(
             speed = 0.5;
         }
 
+        if keyboard.pressed(KeyCode::KeyK) {
+            direction.y += 1.0;
+            direction.z += 1.0;
+        }
+
+        if keyboard.pressed(KeyCode::KeyL) {
+            direction.y += 1.0;
+            direction.z += 1.0;
+        }
+
         if keyboard.pressed(KeyCode::KeyP) {
             std::process::exit(0);
         }
@@ -121,6 +132,7 @@ pub fn player_movement(
 
         /*if mouse.just_pressed(MouseButton::Left) {
             let _location = transform.translation;
+            println!("{:?}", _location);
         }*/
 
         // Normalize the direction and apply movement

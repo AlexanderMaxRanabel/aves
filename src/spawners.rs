@@ -1,4 +1,5 @@
 use crate::components::{camera_sens_component::*, player_component::*, world_model_component::*};
+use rand::Rng;
 
 use bevy::{color::palettes::tailwind, prelude::*, render::view::RenderLayers};
 
@@ -46,25 +47,114 @@ pub fn spawn_view_model(mut commands: Commands) {
         });
 }
 
-pub fn spawn_world_model(
+pub fn _despawn_world_model(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     let floor = meshes.add(Plane3d::new(Vec3::Y, Vec2::splat(50.0)));
-    let wall_1 = meshes.add(Plane3d::new(Vec3::X, Vec2::splat(20.0)));
-    //let wall_2 = meshes.add(Plane3d::new(Vec3::Z, Vec2::splat(-50.0)));
-    let cube = meshes.add(Cuboid::new(2.0, 0.5, 1.0));
+    let cube = meshes.add(Cuboid::new(1.0, 1.0, 1.0));
     let torus = meshes.add(Torus::new(2.0, 0.5));
     let material = materials.add(Color::WHITE);
+    let black_material = materials.add(Color::BLACK);
     commands.spawn((Mesh3d(floor), MeshMaterial3d(material.clone())));
-    commands.spawn((Mesh3d(wall_1), MeshMaterial3d(material.clone())));
-    //commands.spawn((Mesh3d(wall_2), MeshMaterial3d(material.clone())));
+
+    commands.spawn((
+        Mesh3d(cube.clone()),
+        MeshMaterial3d(black_material.clone()),
+        Transform::from_xyz(1.0, 3.0, 0.0),
+    ));
 
     commands.spawn((
         Mesh3d(cube.clone()),
         MeshMaterial3d(material.clone()),
-        Transform::from_xyz(0.0, 0.25, -3.0),
+        Transform::from_xyz(0.1, 0.45, -4.0),
+    ));
+
+    commands.spawn((
+        Mesh3d(cube),
+        MeshMaterial3d(material.clone()),
+        Transform::from_xyz(0.75, 1.75, 0.0),
+    ));
+
+    commands.spawn((
+        Mesh3d(torus.clone()),
+        MeshMaterial3d(material.clone()),
+        Transform::from_xyz(1.0, 0.4, 3.0),
+    ));
+    commands.spawn((
+        Mesh3d(torus.clone()),
+        MeshMaterial3d(material.clone()),
+        Transform::from_xyz(2.0, 1.0, 5.0),
+    ));
+}
+
+pub fn spawn_world_model(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    let mut planet_counter = 0;
+    let mut rng = rand::rng();
+    let mut planet_coord_vector: Vec<Vec<f32>> = vec![vec![], vec![], vec![]];
+    let mut planet_radius_vector: Vec<f32> = vec![];
+    loop {
+        let random_number_x: f32 = rng.random_range(0.0..100.0);
+        planet_coord_vector[0].push(random_number_x);
+        planet_counter += 1;
+        if planet_coord_vector[0].len() > 50 {
+            break;
+        }
+    }
+
+    loop {
+        let random_number_y: f32 = rng.random_range(0.0..100.0);
+        planet_coord_vector[1].push(random_number_y);
+        if planet_coord_vector[1].len() > 50 {
+            break;
+        }
+    }
+
+    loop {
+        let random_number_z: f32 = rng.random_range(0.0..100.0);
+        planet_coord_vector[2].push(random_number_z);
+        if planet_coord_vector[2].len() > 50 {
+            break;
+        }
+    }
+
+    loop {
+        let random_number_r: f32 = rng.random_range(0.0..25.0);
+        planet_radius_vector.push(random_number_r);
+        if planet_radius_vector.len() > planet_counter {
+            break;
+        }
+    }
+    let cube = meshes.add(Cuboid::new(1.0, 1.0, 1.0));
+    let torus = meshes.add(Torus::new(2.0, 0.5));
+    let material = materials.add(Color::WHITE);
+    let black_material = materials.add(Color::BLACK);
+
+    let mut object_mesh_vector: Vec<Handle<Mesh>> = vec![];
+
+    /*for (x, y, z) in planet_coord_vector[0]
+        .iter()
+        .zip(planet_coord_vector[1].iter())
+        .zip(planet_coord_vector[2].iter())
+        .map(|((x, y), z)| (x, y, z))
+    {
+
+    }*/
+
+    for radius in planet_radius_vector {
+        let planet = meshes.add(Sphere::new(radius));
+        object_mesh_vector.push(planet);
+    }
+
+    commands.spawn((
+        Mesh3d(cube.clone()),
+        MeshMaterial3d(black_material.clone()),
+        Transform::from_xyz(1.0, 3.0, 0.0),
     ));
 
     commands.spawn((
@@ -145,6 +235,7 @@ pub fn spawn_cube(
         let location = transform.translation;
         commands.spawn((
             Mesh3d(meshes.add(Cuboid::new(0.6, 0.6, 0.6))),
+            //99, 144, 255
             MeshMaterial3d(materials.add(Color::srgb_u8(99, 144, 255))),
             Transform::from_xyz(location.x, location.y, location.z),
             //(0.0, 0.25 + 0.55 * *num as f32, 0.0),
