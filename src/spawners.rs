@@ -50,48 +50,6 @@ pub fn spawn_view_model(mut commands: Commands) {
         });
 }
 
-pub fn _despawn_world_model(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-) {
-    let floor = meshes.add(Plane3d::new(Vec3::Y, Vec2::splat(50.0)));
-    let cube = meshes.add(Cuboid::new(1.0, 1.0, 1.0));
-    let torus = meshes.add(Torus::new(2.0, 0.5));
-    let material = materials.add(Color::WHITE);
-    let black_material = materials.add(Color::BLACK);
-    commands.spawn((Mesh3d(floor), MeshMaterial3d(material.clone())));
-
-    commands.spawn((
-        Mesh3d(cube.clone()),
-        MeshMaterial3d(black_material.clone()),
-        Transform::from_xyz(1.0, 3.0, 0.0),
-    ));
-
-    commands.spawn((
-        Mesh3d(cube.clone()),
-        MeshMaterial3d(material.clone()),
-        Transform::from_xyz(0.1, 0.45, -4.0),
-    ));
-
-    commands.spawn((
-        Mesh3d(cube),
-        MeshMaterial3d(material.clone()),
-        Transform::from_xyz(0.75, 1.75, 0.0),
-    ));
-
-    commands.spawn((
-        Mesh3d(torus.clone()),
-        MeshMaterial3d(material.clone()),
-        Transform::from_xyz(1.0, 0.4, 3.0),
-    ));
-    commands.spawn((
-        Mesh3d(torus.clone()),
-        MeshMaterial3d(material.clone()),
-        Transform::from_xyz(2.0, 1.0, 5.0),
-    ));
-}
-
 pub fn spawn_world_model(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
@@ -133,10 +91,7 @@ pub fn spawn_world_model(
             break;
         }
     }
-    let cube = meshes.add(Cuboid::new(1.0, 1.0, 1.0));
-    let torus = meshes.add(Torus::new(2.0, 0.5));
     let material = materials.add(Color::WHITE);
-    let black_material = materials.add(Color::BLACK);
 
     let mut object_mesh_vector: Vec<Handle<Mesh>> = vec![];
     for radius in planet_radius_vector {
@@ -161,29 +116,6 @@ pub fn spawn_world_model(
             Transform::from_xyz(x, y, z),
         ));
     }
-
-    commands.spawn((
-        Mesh3d(cube.clone()),
-        MeshMaterial3d(material.clone()),
-        Transform::from_xyz(0.1, 0.45, -4.0),
-    ));
-
-    commands.spawn((
-        Mesh3d(cube),
-        MeshMaterial3d(material.clone()),
-        Transform::from_xyz(0.75, 1.75, 0.0),
-    ));
-
-    commands.spawn((
-        Mesh3d(torus.clone()),
-        MeshMaterial3d(material.clone()),
-        Transform::from_xyz(1.0, 0.4, 3.0),
-    ));
-    commands.spawn((
-        Mesh3d(torus.clone()),
-        MeshMaterial3d(material.clone()),
-        Transform::from_xyz(2.0, 1.0, 5.0),
-    ));
 }
 
 pub fn spawn_lights(mut commands: Commands) {
