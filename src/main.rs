@@ -121,7 +121,7 @@ pub fn player_movement(
             direction.z += 1.0;
         }
 
-        if keyboard.pressed(KeyCode::KeyP) {
+        if keyboard.pressed(KeyCode::Escape) {
             std::process::exit(0);
         }
 
