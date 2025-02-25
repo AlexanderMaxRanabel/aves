@@ -1,7 +1,10 @@
 use crate::components::{camera_sens_component::*, player_component::*, world_model_component::*};
 use rand::Rng;
 
-use bevy::{color::palettes::tailwind, prelude::*, render::view::RenderLayers};
+use bevy::{
+    color::palettes::tailwind, pbr::CLUSTERED_FORWARD_STORAGE_BUFFER_COUNT, prelude::*,
+    render::view::RenderLayers,
+};
 
 impl Default for CameraSensitivity {
     fn default() -> Self {
@@ -99,7 +102,7 @@ pub fn spawn_world_model(
     let mut planet_coord_vector: Vec<Vec<f32>> = vec![vec![], vec![], vec![]];
     let mut planet_radius_vector: Vec<f32> = vec![];
     loop {
-        let random_number_x: f32 = rng.random_range(0.0..100.0);
+        let random_number_x: f32 = rng.random_range(-50.0..50.0);
         planet_coord_vector[0].push(random_number_x);
         planet_counter += 1;
         if planet_coord_vector[0].len() > 50 {
@@ -108,7 +111,7 @@ pub fn spawn_world_model(
     }
 
     loop {
-        let random_number_y: f32 = rng.random_range(0.0..100.0);
+        let random_number_y: f32 = rng.random_range(-50.0..50.0);
         planet_coord_vector[1].push(random_number_y);
         if planet_coord_vector[1].len() > 50 {
             break;
@@ -116,7 +119,7 @@ pub fn spawn_world_model(
     }
 
     loop {
-        let random_number_z: f32 = rng.random_range(0.0..100.0);
+        let random_number_z: f32 = rng.random_range(-50.0..50.0);
         planet_coord_vector[2].push(random_number_z);
         if planet_coord_vector[2].len() > 50 {
             break;
@@ -136,26 +139,28 @@ pub fn spawn_world_model(
     let black_material = materials.add(Color::BLACK);
 
     let mut object_mesh_vector: Vec<Handle<Mesh>> = vec![];
-
-    /*for (x, y, z) in planet_coord_vector[0]
-        .iter()
-        .zip(planet_coord_vector[1].iter())
-        .zip(planet_coord_vector[2].iter())
-        .map(|((x, y), z)| (x, y, z))
-    {
-
-    }*/
-
     for radius in planet_radius_vector {
         let planet = meshes.add(Sphere::new(radius));
         object_mesh_vector.push(planet);
     }
 
-    commands.spawn((
-        Mesh3d(cube.clone()),
-        MeshMaterial3d(black_material.clone()),
-        Transform::from_xyz(1.0, 3.0, 0.0),
-    ));
+    for (ra, rb, rc, planet_object) in planet_coord_vector[0]
+        .iter()
+        .zip(planet_coord_vector[1].iter())
+        .zip(planet_coord_vector[2].iter())
+        .zip(object_mesh_vector.iter())
+        .map(|(((ra, rb), rc), planet_object)| (ra, rb, rc, planet_object))
+    {
+        let x = *ra;
+        let y = *rb;
+        let z = *rc;
+
+        commands.spawn((
+            Mesh3d(planet_object.clone()),
+            MeshMaterial3d(material.clone()),
+            Transform::from_xyz(x, y, z),
+        ));
+    }
 
     commands.spawn((
         Mesh3d(cube.clone()),
